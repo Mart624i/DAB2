@@ -10,7 +10,7 @@ namespace dab2_EfCore.Models
         public int Cpr_number { get; set; }
         public string Address { get; set; }
 
-
+        [Required]
         public int Cvr_number { get; set; }  //Foreign key
         public Society Society { get; set; }
     }
