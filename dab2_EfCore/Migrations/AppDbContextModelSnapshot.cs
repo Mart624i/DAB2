@@ -31,7 +31,6 @@ namespace dab2_EfCore.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Member_id"), 1L, 1);
 
                     b.Property<string>("Address")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("Cpr_number")
@@ -41,7 +40,6 @@ namespace dab2_EfCore.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("Name")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Member_id");
@@ -50,6 +48,24 @@ namespace dab2_EfCore.Migrations
                         .IsUnique();
 
                     b.ToTable("Chairmen");
+
+                    b.HasData(
+                        new
+                        {
+                            Member_id = 1,
+                            Address = "Chairmanvejnummeret",
+                            Cpr_number = 1111,
+                            Cvr_number = 1,
+                            Name = "Martin"
+                        },
+                        new
+                        {
+                            Member_id = 2,
+                            Address = "Chairmanvejnummerto",
+                            Cpr_number = 2222,
+                            Cvr_number = 2,
+                            Name = "Jens"
+                        });
                 });
 
             modelBuilder.Entity("dab2_EfCore.Models.Location", b =>
@@ -77,6 +93,20 @@ namespace dab2_EfCore.Migrations
                     b.HasIndex("MunicipalityZipcode");
 
                     b.ToTable("Locations");
+
+                    b.HasData(
+                        new
+                        {
+                            Address = "Denførstevej",
+                            Bathroom = 1,
+                            Zipcode = 8000
+                        },
+                        new
+                        {
+                            Address = "Denandenvej",
+                            Bathroom = 2,
+                            Zipcode = 7700
+                        });
                 });
 
             modelBuilder.Entity("dab2_EfCore.Models.Member", b =>
@@ -91,10 +121,9 @@ namespace dab2_EfCore.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("Name")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("SocietyCvr_number")
+                    b.Property<int?>("SocietyCvr_number")
                         .HasColumnType("int");
 
                     b.HasKey("Member_id");
@@ -102,6 +131,20 @@ namespace dab2_EfCore.Migrations
                     b.HasIndex("SocietyCvr_number");
 
                     b.ToTable("Members");
+
+                    b.HasData(
+                        new
+                        {
+                            Member_id = 1,
+                            Cvr_number = 1,
+                            Name = "Jesper"
+                        },
+                        new
+                        {
+                            Member_id = 2,
+                            Cvr_number = 2,
+                            Name = "Carsten"
+                        });
                 });
 
             modelBuilder.Entity("dab2_EfCore.Models.Municipality", b =>
@@ -121,6 +164,20 @@ namespace dab2_EfCore.Migrations
                     b.HasKey("Zipcode");
 
                     b.ToTable("Municipalities");
+
+                    b.HasData(
+                        new
+                        {
+                            Zipcode = 8000,
+                            AccessKey = 1111,
+                            Name = "Aarhus"
+                        },
+                        new
+                        {
+                            Zipcode = 7700,
+                            AccessKey = 2222,
+                            Name = "Thisted"
+                        });
                 });
 
             modelBuilder.Entity("dab2_EfCore.Models.Room", b =>
@@ -145,6 +202,20 @@ namespace dab2_EfCore.Migrations
                     b.HasIndex("LocationAddress");
 
                     b.ToTable("Rooms");
+
+                    b.HasData(
+                        new
+                        {
+                            RoomNumber = 1,
+                            Address = "Denførstevej",
+                            Capacity = 100
+                        },
+                        new
+                        {
+                            RoomNumber = 2,
+                            Address = "Denandenvej",
+                            Capacity = 200
+                        });
                 });
 
             modelBuilder.Entity("dab2_EfCore.Models.Society", b =>
@@ -156,13 +227,12 @@ namespace dab2_EfCore.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Cvr_number"), 1L, 1);
 
                     b.Property<string>("Activity")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int?>("MunicipalityZipcode")
                         .HasColumnType("int");
 
-                    b.Property<int>("Zip_code")
+                    b.Property<int>("Zipcode")
                         .HasColumnType("int");
 
                     b.HasKey("Cvr_number");
@@ -170,6 +240,20 @@ namespace dab2_EfCore.Migrations
                     b.HasIndex("MunicipalityZipcode");
 
                     b.ToTable("Societies");
+
+                    b.HasData(
+                        new
+                        {
+                            Cvr_number = 1,
+                            Activity = "Fodbold",
+                            Zipcode = 8000
+                        },
+                        new
+                        {
+                            Cvr_number = 2,
+                            Activity = "Håndbold",
+                            Zipcode = 7700
+                        });
                 });
 
             modelBuilder.Entity("dab2_EfCore.Models.Chairman", b =>
@@ -196,9 +280,7 @@ namespace dab2_EfCore.Migrations
                 {
                     b.HasOne("dab2_EfCore.Models.Society", "Society")
                         .WithMany("Members")
-                        .HasForeignKey("SocietyCvr_number")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("SocietyCvr_number");
 
                     b.Navigation("Society");
                 });
@@ -214,9 +296,11 @@ namespace dab2_EfCore.Migrations
 
             modelBuilder.Entity("dab2_EfCore.Models.Society", b =>
                 {
-                    b.HasOne("dab2_EfCore.Models.Municipality", null)
+                    b.HasOne("dab2_EfCore.Models.Municipality", "Municipality")
                         .WithMany("ListOfSocieties")
                         .HasForeignKey("MunicipalityZipcode");
+
+                    b.Navigation("Municipality");
                 });
 
             modelBuilder.Entity("dab2_EfCore.Models.Location", b =>
@@ -233,8 +317,7 @@ namespace dab2_EfCore.Migrations
 
             modelBuilder.Entity("dab2_EfCore.Models.Society", b =>
                 {
-                    b.Navigation("Chairman")
-                        .IsRequired();
+                    b.Navigation("Chairman");
 
                     b.Navigation("Members");
                 });

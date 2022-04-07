@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace dab2_EfCore.Migrations
 {
-    public partial class InitialSchema : Migration
+    public partial class NewSchema : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -50,8 +50,8 @@ namespace dab2_EfCore.Migrations
                 {
                     Cvr_number = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Zip_code = table.Column<int>(type: "int", nullable: false),
-                    Activity = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Activity = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Zipcode = table.Column<int>(type: "int", nullable: false),
                     MunicipalityZipcode = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
@@ -90,9 +90,9 @@ namespace dab2_EfCore.Migrations
                 {
                     Member_id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Cpr_number = table.Column<int>(type: "int", nullable: false),
-                    Address = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Address = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Cvr_number = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
@@ -112,9 +112,9 @@ namespace dab2_EfCore.Migrations
                 {
                     Member_id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Cvr_number = table.Column<int>(type: "int", nullable: false),
-                    SocietyCvr_number = table.Column<int>(type: "int", nullable: false)
+                    SocietyCvr_number = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -123,9 +123,63 @@ namespace dab2_EfCore.Migrations
                         name: "FK_Members_Societies_SocietyCvr_number",
                         column: x => x.SocietyCvr_number,
                         principalTable: "Societies",
-                        principalColumn: "Cvr_number",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Cvr_number");
                 });
+
+            migrationBuilder.InsertData(
+                table: "Locations",
+                columns: new[] { "Address", "Bathroom", "ClosingTime", "MunicipalityZipcode", "OpeningTime", "Zipcode" },
+                values: new object[,]
+                {
+                    { "Denandenvej", 2, null, null, null, 7700 },
+                    { "Denførstevej", 1, null, null, null, 8000 }
+                });
+
+            migrationBuilder.InsertData(
+                table: "Members",
+                columns: new[] { "Member_id", "Cvr_number", "Name", "SocietyCvr_number" },
+                values: new object[,]
+                {
+                    { 1, 1, "Jesper", null },
+                    { 2, 2, "Carsten", null }
+                });
+
+            migrationBuilder.InsertData(
+                table: "Municipalities",
+                columns: new[] { "Zipcode", "AccessKey", "Name" },
+                values: new object[,]
+                {
+                    { 7700, 2222, "Thisted" },
+                    { 8000, 1111, "Aarhus" }
+                });
+
+            migrationBuilder.InsertData(
+                table: "Rooms",
+                columns: new[] { "RoomNumber", "Address", "Capacity", "LocationAddress" },
+                values: new object[,]
+                {
+                    { 1, "Denførstevej", 100, null },
+                    { 2, "Denandenvej", 200, null }
+                });
+
+            migrationBuilder.InsertData(
+                table: "Societies",
+                columns: new[] { "Cvr_number", "Activity", "MunicipalityZipcode", "Zipcode" },
+                values: new object[,]
+                {
+                    { 1, "Fodbold", null, 8000 },
+                    { 2, "Håndbold", null, 7700 }
+                });
+
+            migrationBuilder.InsertData(
+                table: "Chairmen",
+                columns: new[] { "Member_id", "Address", "Cpr_number", "Cvr_number", "Name" },
+                values: new object[] { 1, "Chairmanvejnummeret", 1111, 1, "Martin" });
+
+            migrationBuilder.InsertData(
+                table: "Chairmen",
+                columns: new[] { "Member_id", "Address", "Cpr_number", "Cvr_number", "Name" },
+                values: new object[] { 2, "Chairmanvejnummerto", 2222, 2, "Jens" });
 
             migrationBuilder.CreateIndex(
                 name: "IX_Chairmen_Cvr_number",
