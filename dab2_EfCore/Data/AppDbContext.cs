@@ -8,6 +8,14 @@ namespace dab2_EfCore.Data
         public AppDbContext(DbContextOptions<AppDbContext> options)
             : base(options) { }
 
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<Society>()
+                .HasOne(b => b.Chairman)
+                .WithOne(i => i.Society)
+                .HasForeignKey<Chairman>(b => b.Cvr_number);
+        }
+
         public DbSet<Chairman> Chairmen { get; set; }
         public DbSet<Location> Locations { get; set; }
         public DbSet<Member> Members { get; set; }
