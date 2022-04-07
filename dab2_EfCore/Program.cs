@@ -1,5 +1,7 @@
 using dab2_EfCore.Data;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.InMemory;
+
 
 var builder = WebApplication.CreateBuilder(args);
 
