@@ -10,7 +10,7 @@ namespace dab2_EfCore.Models
 
         public string Activity { get; set; }
 
-        public Chairman Name { get; set; }
+        public Chairman Chairman { get; set; }
         public List<Member> Members { get; set; }
     }
 }
