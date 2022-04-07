@@ -1,10 +1,13 @@
-﻿namespace dab2_EfCore.Models
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace dab2_EfCore.Models
 {
     public class Room
     {
         //Many to one relationship with Location.cs
 
-        public int? RoomNumber { get; set; }
+        [Key]
+        public int? RoomNumber { get; set; }    //Primary key
         public int? Capacity { get; set; }
 
         //Foreign key - Location:

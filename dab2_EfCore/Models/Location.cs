@@ -1,11 +1,14 @@
-﻿namespace dab2_EfCore.Models
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace dab2_EfCore.Models
 {
     public class Location
     {
         //Many to one relationship with Municipality.cs
         //One to many relationship with Room.cs
 
-        public string? Address { get; set; }
+        [Key]
+        public string? Address { get; set; }    //Primary key
         public DateTime? OpeningTime { get; set; }
         public DateTime? ClosingTime { get; set; }
         public int Bathroom { get; set; }
