@@ -9,16 +9,20 @@ namespace dab2_EfCore.Models
 
         [Key]
         public string? Address { get; set; }    //Primary key
-        public DateTime? OpeningTime { get; set; }
-        public DateTime? ClosingTime { get; set; }
+     
         public int Bathroom { get; set; }
+
+        public int Capacity { get; set; }
+
+        public bool IsBooked { get; set; }
+
+        public int AccessKey { get; set; }
 
         //Foreign key - Municipality:
         public int Zipcode { get; set; }
         public Municipality? Municipality { get; set; }
 
-        //Foreign key - Room:
-        public List<Room>? Rooms { get; set; }
+       
 
         //Old:
         //public List<Municipality>? ListOfMunicipalities { get; set; }
