@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace dab2_EfCore.Migrations
 {
-    public partial class NewSchema : Migration
+    public partial class InitialSchema : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -28,9 +28,10 @@ namespace dab2_EfCore.Migrations
                 columns: table => new
                 {
                     Address = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    OpeningTime = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    ClosingTime = table.Column<DateTime>(type: "datetime2", nullable: true),
                     Bathroom = table.Column<int>(type: "int", nullable: false),
+                    Capacity = table.Column<int>(type: "int", nullable: false),
+                    IsBooked = table.Column<bool>(type: "bit", nullable: false),
+                    AccessKey = table.Column<int>(type: "int", nullable: false),
                     Zipcode = table.Column<int>(type: "int", nullable: false),
                     MunicipalityZipcode = table.Column<int>(type: "int", nullable: true)
                 },
@@ -45,6 +46,27 @@ namespace dab2_EfCore.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Bookings",
+                columns: table => new
+                {
+                    BookingId = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    OpeningTime = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    ClosingTime = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    Address = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    LocationAddress = table.Column<string>(type: "nvarchar(450)", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Bookings", x => x.BookingId);
+                    table.ForeignKey(
+                        name: "FK_Bookings_Locations_LocationAddress",
+                        column: x => x.LocationAddress,
+                        principalTable: "Locations",
+                        principalColumn: "Address");
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Societies",
                 columns: table => new
                 {
@@ -52,36 +74,23 @@ namespace dab2_EfCore.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Activity = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Zipcode = table.Column<int>(type: "int", nullable: false),
-                    MunicipalityZipcode = table.Column<int>(type: "int", nullable: true)
+                    MunicipalityZipcode = table.Column<int>(type: "int", nullable: true),
+                    BookingId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Societies", x => x.Cvr_number);
                     table.ForeignKey(
+                        name: "FK_Societies_Bookings_BookingId",
+                        column: x => x.BookingId,
+                        principalTable: "Bookings",
+                        principalColumn: "BookingId",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
                         name: "FK_Societies_Municipalities_MunicipalityZipcode",
                         column: x => x.MunicipalityZipcode,
                         principalTable: "Municipalities",
                         principalColumn: "Zipcode");
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Rooms",
-                columns: table => new
-                {
-                    RoomNumber = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Capacity = table.Column<int>(type: "int", nullable: true),
-                    Address = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    LocationAddress = table.Column<string>(type: "nvarchar(450)", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Rooms", x => x.RoomNumber);
-                    table.ForeignKey(
-                        name: "FK_Rooms_Locations_LocationAddress",
-                        column: x => x.LocationAddress,
-                        principalTable: "Locations",
-                        principalColumn: "Address");
                 });
 
             migrationBuilder.CreateTable(
@@ -127,12 +136,21 @@ namespace dab2_EfCore.Migrations
                 });
 
             migrationBuilder.InsertData(
-                table: "Locations",
-                columns: new[] { "Address", "Bathroom", "ClosingTime", "MunicipalityZipcode", "OpeningTime", "Zipcode" },
+                table: "Bookings",
+                columns: new[] { "BookingId", "Address", "ClosingTime", "LocationAddress", "OpeningTime" },
                 values: new object[,]
                 {
-                    { "Denandenvej", 2, null, null, null, 7700 },
-                    { "Denførstevej", 1, null, null, null, 8000 }
+                    { 1, "1", new DateTime(2022, 4, 8, 11, 15, 52, 745, DateTimeKind.Local).AddTicks(4442), null, new DateTime(2022, 4, 8, 11, 15, 52, 745, DateTimeKind.Local).AddTicks(4392) },
+                    { 2, "1", new DateTime(2022, 4, 8, 11, 15, 52, 745, DateTimeKind.Local).AddTicks(4504), null, new DateTime(2022, 4, 8, 11, 15, 52, 745, DateTimeKind.Local).AddTicks(4499) }
+                });
+
+            migrationBuilder.InsertData(
+                table: "Locations",
+                columns: new[] { "Address", "AccessKey", "Bathroom", "Capacity", "IsBooked", "MunicipalityZipcode", "Zipcode" },
+                values: new object[,]
+                {
+                    { "Denandenvej", 0, 2, 0, false, null, 7700 },
+                    { "Denførstevej", 0, 1, 0, false, null, 8000 }
                 });
 
             migrationBuilder.InsertData(
@@ -154,21 +172,12 @@ namespace dab2_EfCore.Migrations
                 });
 
             migrationBuilder.InsertData(
-                table: "Rooms",
-                columns: new[] { "RoomNumber", "Address", "Capacity", "LocationAddress" },
-                values: new object[,]
-                {
-                    { 1, "Denførstevej", 100, null },
-                    { 2, "Denandenvej", 200, null }
-                });
-
-            migrationBuilder.InsertData(
                 table: "Societies",
-                columns: new[] { "Cvr_number", "Activity", "MunicipalityZipcode", "Zipcode" },
+                columns: new[] { "Cvr_number", "Activity", "BookingId", "MunicipalityZipcode", "Zipcode" },
                 values: new object[,]
                 {
-                    { 1, "Fodbold", null, 8000 },
-                    { 2, "Håndbold", null, 7700 }
+                    { 1, "Fodbold", 0, null, 8000 },
+                    { 2, "Håndbold", 0, null, 7700 }
                 });
 
             migrationBuilder.InsertData(
@@ -180,6 +189,11 @@ namespace dab2_EfCore.Migrations
                 table: "Chairmen",
                 columns: new[] { "Member_id", "Address", "Cpr_number", "Cvr_number", "Name" },
                 values: new object[] { 2, "Chairmanvejnummerto", 2222, 2, "Jens" });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Bookings_LocationAddress",
+                table: "Bookings",
+                column: "LocationAddress");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Chairmen_Cvr_number",
@@ -198,9 +212,9 @@ namespace dab2_EfCore.Migrations
                 column: "SocietyCvr_number");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Rooms_LocationAddress",
-                table: "Rooms",
-                column: "LocationAddress");
+                name: "IX_Societies_BookingId",
+                table: "Societies",
+                column: "BookingId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Societies_MunicipalityZipcode",
@@ -217,10 +231,10 @@ namespace dab2_EfCore.Migrations
                 name: "Members");
 
             migrationBuilder.DropTable(
-                name: "Rooms");
+                name: "Societies");
 
             migrationBuilder.DropTable(
-                name: "Societies");
+                name: "Bookings");
 
             migrationBuilder.DropTable(
                 name: "Locations");

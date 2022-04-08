@@ -9,7 +9,9 @@ namespace dab2_EfCore.Data
         public DbSet<Location>? Locations { get; set; }
         public DbSet<Member>? Members { get; set; }
         public DbSet<Municipality>? Municipalities { get; set; }
-        public DbSet<Room>? Rooms { get; set; }
+
+        public DbSet<Booking> Bookings { get; set; }
+       
         public DbSet<Society>? Societies { get; set; }
 
         public AppDbContext(DbContextOptions<AppDbContext> options)
@@ -56,20 +58,23 @@ namespace dab2_EfCore.Data
                 });
             });
 
-            modelBuilder.Entity<Room>(entity =>
+            modelBuilder.Entity<Booking>(entity =>
             {
-                entity.HasData(new Room
+                entity.HasData(new Booking
                 {
-                    RoomNumber = 1,
-                    Capacity = 100,
-                    Address = "Denførstevej"
+                    BookingId = 1,
+                    OpeningTime = DateTime.Now,
+                    ClosingTime = DateTime.Now,
+                    Address = "1"
                 });
 
-                entity.HasData(new Room
+                entity.HasData(new Booking
                 {
-                    RoomNumber = 2,
-                    Capacity = 200,
-                    Address = "Denandenvej"
+                    BookingId = 2,
+                    OpeningTime = DateTime.Now,
+                    ClosingTime = DateTime.Now,
+        
+                    Address = "1"
                 });
             });
 

@@ -22,6 +22,49 @@ namespace dab2_EfCore.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder, 1L, 1);
 
+            modelBuilder.Entity("dab2_EfCore.Models.Booking", b =>
+                {
+                    b.Property<int>("BookingId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("BookingId"), 1L, 1);
+
+                    b.Property<string>("Address")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("ClosingTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("LocationAddress")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<DateTime?>("OpeningTime")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("BookingId");
+
+                    b.HasIndex("LocationAddress");
+
+                    b.ToTable("Bookings");
+
+                    b.HasData(
+                        new
+                        {
+                            BookingId = 1,
+                            Address = "1",
+                            ClosingTime = new DateTime(2022, 4, 8, 11, 15, 52, 745, DateTimeKind.Local).AddTicks(4442),
+                            OpeningTime = new DateTime(2022, 4, 8, 11, 15, 52, 745, DateTimeKind.Local).AddTicks(4392)
+                        },
+                        new
+                        {
+                            BookingId = 2,
+                            Address = "1",
+                            ClosingTime = new DateTime(2022, 4, 8, 11, 15, 52, 745, DateTimeKind.Local).AddTicks(4504),
+                            OpeningTime = new DateTime(2022, 4, 8, 11, 15, 52, 745, DateTimeKind.Local).AddTicks(4499)
+                        });
+                });
+
             modelBuilder.Entity("dab2_EfCore.Models.Chairman", b =>
                 {
                     b.Property<int>("Member_id")
@@ -73,17 +116,20 @@ namespace dab2_EfCore.Migrations
                     b.Property<string>("Address")
                         .HasColumnType("nvarchar(450)");
 
+                    b.Property<int>("AccessKey")
+                        .HasColumnType("int");
+
                     b.Property<int>("Bathroom")
                         .HasColumnType("int");
 
-                    b.Property<DateTime?>("ClosingTime")
-                        .HasColumnType("datetime2");
+                    b.Property<int>("Capacity")
+                        .HasColumnType("int");
+
+                    b.Property<bool>("IsBooked")
+                        .HasColumnType("bit");
 
                     b.Property<int?>("MunicipalityZipcode")
                         .HasColumnType("int");
-
-                    b.Property<DateTime?>("OpeningTime")
-                        .HasColumnType("datetime2");
 
                     b.Property<int>("Zipcode")
                         .HasColumnType("int");
@@ -98,13 +144,19 @@ namespace dab2_EfCore.Migrations
                         new
                         {
                             Address = "Denførstevej",
+                            AccessKey = 0,
                             Bathroom = 1,
+                            Capacity = 0,
+                            IsBooked = false,
                             Zipcode = 8000
                         },
                         new
                         {
                             Address = "Denandenvej",
+                            AccessKey = 0,
                             Bathroom = 2,
+                            Capacity = 0,
+                            IsBooked = false,
                             Zipcode = 7700
                         });
                 });
@@ -180,44 +232,6 @@ namespace dab2_EfCore.Migrations
                         });
                 });
 
-            modelBuilder.Entity("dab2_EfCore.Models.Room", b =>
-                {
-                    b.Property<int?>("RoomNumber")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int?>("RoomNumber"), 1L, 1);
-
-                    b.Property<string>("Address")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int?>("Capacity")
-                        .HasColumnType("int");
-
-                    b.Property<string>("LocationAddress")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.HasKey("RoomNumber");
-
-                    b.HasIndex("LocationAddress");
-
-                    b.ToTable("Rooms");
-
-                    b.HasData(
-                        new
-                        {
-                            RoomNumber = 1,
-                            Address = "Denførstevej",
-                            Capacity = 100
-                        },
-                        new
-                        {
-                            RoomNumber = 2,
-                            Address = "Denandenvej",
-                            Capacity = 200
-                        });
-                });
-
             modelBuilder.Entity("dab2_EfCore.Models.Society", b =>
                 {
                     b.Property<int>("Cvr_number")
@@ -229,6 +243,9 @@ namespace dab2_EfCore.Migrations
                     b.Property<string>("Activity")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int>("BookingId")
+                        .HasColumnType("int");
+
                     b.Property<int?>("MunicipalityZipcode")
                         .HasColumnType("int");
 
@@ -236,6 +253,8 @@ namespace dab2_EfCore.Migrations
                         .HasColumnType("int");
 
                     b.HasKey("Cvr_number");
+
+                    b.HasIndex("BookingId");
 
                     b.HasIndex("MunicipalityZipcode");
 
@@ -246,14 +265,25 @@ namespace dab2_EfCore.Migrations
                         {
                             Cvr_number = 1,
                             Activity = "Fodbold",
+                            BookingId = 0,
                             Zipcode = 8000
                         },
                         new
                         {
                             Cvr_number = 2,
                             Activity = "Håndbold",
+                            BookingId = 0,
                             Zipcode = 7700
                         });
+                });
+
+            modelBuilder.Entity("dab2_EfCore.Models.Booking", b =>
+                {
+                    b.HasOne("dab2_EfCore.Models.Location", "Location")
+                        .WithMany()
+                        .HasForeignKey("LocationAddress");
+
+                    b.Navigation("Location");
                 });
 
             modelBuilder.Entity("dab2_EfCore.Models.Chairman", b =>
@@ -285,27 +315,21 @@ namespace dab2_EfCore.Migrations
                     b.Navigation("Society");
                 });
 
-            modelBuilder.Entity("dab2_EfCore.Models.Room", b =>
-                {
-                    b.HasOne("dab2_EfCore.Models.Location", "Location")
-                        .WithMany("Rooms")
-                        .HasForeignKey("LocationAddress");
-
-                    b.Navigation("Location");
-                });
-
             modelBuilder.Entity("dab2_EfCore.Models.Society", b =>
                 {
+                    b.HasOne("dab2_EfCore.Models.Booking", "Booking")
+                        .WithMany()
+                        .HasForeignKey("BookingId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("dab2_EfCore.Models.Municipality", "Municipality")
                         .WithMany("ListOfSocieties")
                         .HasForeignKey("MunicipalityZipcode");
 
-                    b.Navigation("Municipality");
-                });
+                    b.Navigation("Booking");
 
-            modelBuilder.Entity("dab2_EfCore.Models.Location", b =>
-                {
-                    b.Navigation("Rooms");
+                    b.Navigation("Municipality");
                 });
 
             modelBuilder.Entity("dab2_EfCore.Models.Municipality", b =>
