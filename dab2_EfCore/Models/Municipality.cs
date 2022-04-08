@@ -7,7 +7,7 @@ namespace dab2_EfCore.Models
         //One to many relationship with Society.cs and Location.cs
 
         [Key]
-        public int? Zipcode { get; set; }    //Primary key
+        public int Zipcode { get; set; }    //Primary key
         public string? Name { get; set; }
         public int AccessKey { get; set; }
 

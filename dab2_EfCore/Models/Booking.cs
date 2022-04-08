@@ -10,7 +10,6 @@ namespace dab2_EfCore.Models
         public DateTime? ClosingTime { get; set; }
 
         //Foreign key - Location
-
         public string? Address { get; set; }
         public Location? Location { get; set; }
     }

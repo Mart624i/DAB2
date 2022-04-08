@@ -53,15 +53,15 @@ namespace dab2_EfCore.Migrations
                         {
                             BookingId = 1,
                             Address = "1",
-                            ClosingTime = new DateTime(2022, 4, 8, 11, 15, 52, 745, DateTimeKind.Local).AddTicks(4442),
-                            OpeningTime = new DateTime(2022, 4, 8, 11, 15, 52, 745, DateTimeKind.Local).AddTicks(4392)
+                            ClosingTime = new DateTime(2022, 4, 8, 11, 56, 18, 236, DateTimeKind.Local).AddTicks(1429),
+                            OpeningTime = new DateTime(2022, 4, 8, 11, 56, 18, 236, DateTimeKind.Local).AddTicks(1365)
                         },
                         new
                         {
                             BookingId = 2,
                             Address = "1",
-                            ClosingTime = new DateTime(2022, 4, 8, 11, 15, 52, 745, DateTimeKind.Local).AddTicks(4504),
-                            OpeningTime = new DateTime(2022, 4, 8, 11, 15, 52, 745, DateTimeKind.Local).AddTicks(4499)
+                            ClosingTime = new DateTime(2022, 4, 8, 11, 56, 18, 236, DateTimeKind.Local).AddTicks(1448),
+                            OpeningTime = new DateTime(2022, 4, 8, 11, 56, 18, 236, DateTimeKind.Local).AddTicks(1444)
                         });
                 });
 

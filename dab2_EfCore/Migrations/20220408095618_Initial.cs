@@ -5,10 +5,10 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace dab2_EfCore.Migrations
 {
-    public partial class InitialSchema : Migration
+    public partial class Initial : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
-        {
+        {/*
             migrationBuilder.CreateTable(
                 name: "Municipalities",
                 columns: table => new
@@ -140,8 +140,8 @@ namespace dab2_EfCore.Migrations
                 columns: new[] { "BookingId", "Address", "ClosingTime", "LocationAddress", "OpeningTime" },
                 values: new object[,]
                 {
-                    { 1, "1", new DateTime(2022, 4, 8, 11, 15, 52, 745, DateTimeKind.Local).AddTicks(4442), null, new DateTime(2022, 4, 8, 11, 15, 52, 745, DateTimeKind.Local).AddTicks(4392) },
-                    { 2, "1", new DateTime(2022, 4, 8, 11, 15, 52, 745, DateTimeKind.Local).AddTicks(4504), null, new DateTime(2022, 4, 8, 11, 15, 52, 745, DateTimeKind.Local).AddTicks(4499) }
+                    { 1, "1", new DateTime(2022, 4, 8, 11, 56, 18, 236, DateTimeKind.Local).AddTicks(1429), null, new DateTime(2022, 4, 8, 11, 56, 18, 236, DateTimeKind.Local).AddTicks(1365) },
+                    { 2, "1", new DateTime(2022, 4, 8, 11, 56, 18, 236, DateTimeKind.Local).AddTicks(1448), null, new DateTime(2022, 4, 8, 11, 56, 18, 236, DateTimeKind.Local).AddTicks(1444) }
                 });
 
             migrationBuilder.InsertData(
@@ -240,7 +240,7 @@ namespace dab2_EfCore.Migrations
                 name: "Locations");
 
             migrationBuilder.DropTable(
-                name: "Municipalities");
+                name: "Municipalities");*/
         }
     }
 }

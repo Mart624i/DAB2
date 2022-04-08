@@ -9,8 +9,7 @@ namespace dab2_EfCore.Data
         public DbSet<Location>? Locations { get; set; }
         public DbSet<Member>? Members { get; set; }
         public DbSet<Municipality>? Municipalities { get; set; }
-
-        public DbSet<Booking> Bookings { get; set; }
+        public DbSet<Booking>? Bookings { get; set; }
        
         public DbSet<Society>? Societies { get; set; }
 
@@ -39,6 +38,14 @@ namespace dab2_EfCore.Data
                     Name = "Thisted",
                     AccessKey = 2222
                 });
+
+                entity.HasData(new Municipality
+                {
+                    Zipcode = 9000,
+                    Name = "Test",
+                    AccessKey = 3333
+                });
+
             });
 
             modelBuilder.Entity<Location>(entity =>
@@ -73,7 +80,7 @@ namespace dab2_EfCore.Data
                     BookingId = 2,
                     OpeningTime = DateTime.Now,
                     ClosingTime = DateTime.Now,
-        
+
                     Address = "1"
                 });
             });
