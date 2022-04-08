@@ -9,6 +9,7 @@ namespace dab2_EfCore.Models
         public string? Name { get; set; }
         public int Cpr_number { get; set; }
         public string? Address { get; set; }
+        public bool Keybool { get; set; }
 
         [Required]
         public int Cvr_number { get; set; }  //Foreign key

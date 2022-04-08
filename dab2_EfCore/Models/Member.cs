@@ -7,6 +7,7 @@ namespace dab2_EfCore.Models
         [Key]
         public int Member_id { get; set; } //Primary key
         public string? Name { get; set; }
+        public bool Keybool { get; set; }
 
         public int Cvr_number { get; set; } //Foreign key
         public Society? Society { get; set; }
